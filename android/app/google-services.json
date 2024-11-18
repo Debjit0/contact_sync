@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "652651089184",
+    "project_id": "assigntodo1",
+    "storage_bucket": "assigntodo1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:652651089184:android:6b42ab0ad86d92576e5b45",
+        "android_client_info": {
+          "package_name": "com.assigntodo.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeNsjTrqkXZiniH_iheBgOIe1O7EgsAyw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:652651089184:android:5ae2321fa30c0d4a6e5b45",
+        "android_client_info": {
+          "package_name": "com.example.contact_sync"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeNsjTrqkXZiniH_iheBgOIe1O7EgsAyw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
