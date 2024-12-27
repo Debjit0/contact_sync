@@ -13,27 +13,122 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  final GoogleSignIn googleSignIn = GoogleSignIn(scopes: [
-    'email',
-    'https://www.googleapis.com/auth/contacts.readonly',
-    'https://www.googleapis.com/auth/contacts'
-  ]);
+  final GoogleSignIn googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+      'https://www.googleapis.com/auth/contacts',
+    ],
+  );
+
+  GoogleSignInAccount? _account;
+
+  @override
+  void initState() {
+    super.initState();
+    _initialsignIn();
+  }
+
+  Future<void> _initialsignIn() async {
+    try {
+      GoogleSignInAccount? account = await googleSignIn.signIn();
+      setState(() {
+        _account = account; // Update state when sign-in is complete
+      });
+    } catch (e) {
+      print('Error during Google Sign-In: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Contact Sync")),
+      appBar: AppBar(
+          title: const Text(
+        "Synkify",
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+      )),
       body: Column(
         children: [
-          ElevatedButton(
-              onPressed: () {
-                handleSignIn();
-              },
-              child: Text("Google Sign In")),
+          Container(
+            margin: EdgeInsets.all(12),
+            //height: 50,
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Google",
+                  style: TextStyle(fontSize: 14),
+                ),
+                // condition for alternatives
+                _account == null
+                    ? Container(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Color.fromARGB(81, 111, 176, 209),
+                        ),
+                        padding: EdgeInsets.all(12),
+                        width: double.infinity,
+                        child: Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Not signed in to Google",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                TextButton(
+                                    onPressed: () {
+                                      handleSignIn();
+                                    },
+                                    child: const Text("Click Here to Sign In"))
+                              ],
+                            ),
+                          ],
+                        ))
+                    : Container(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Color.fromARGB(81, 111, 176, 209),
+                        ),
+                        padding: EdgeInsets.all(12),
+                        width: double.infinity,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Signed in",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                Text(_account!.email)
+                              ],
+                            ),
+                            const Icon(
+                              Icons.check,
+                              size: 28,
+                              color: Colors.green,
+                            ),
+                          ],
+                        ),
+                      ),
+              ],
+            ),
+          ),
+          // ElevatedButton(
+          //     onPressed: () {
+          //       handleSignIn();
+          //     },
+          //     child: const Text("Google Sign In")),
           ElevatedButton(
               onPressed: () {
                 handleGetContacts();
               },
-              child: Text("Get Contacts"))
+              child: const Text("Get Contacts"))
         ],
       ),
     );
@@ -49,15 +144,9 @@ class _HomepageState extends State<Homepage> {
     getGoogleContacts();
   }
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-  );
-
   Future<void> getGoogleContacts() async {
+    GoogleSignInAccount? account = await googleSignIn.signIn();
     try {
-      final GoogleSignInAccount? account = await _googleSignIn.signIn();
       if (account == null) {
         print("Sign-in failed or was canceled.");
         return;
@@ -89,11 +178,10 @@ class _HomepageState extends State<Homepage> {
 
     try {
       final peopleApi = PeopleServiceApi(client);
-      final response = await peopleApi.people.connections.list(
-        'people/me',
-        personFields: 'names,emailAddresses,phoneNumbers',
-        pageSize: 500 //change to fetchhh moreeeeeee 
-      );
+      final response = await peopleApi.people.connections.list('people/me',
+          personFields: 'names,emailAddresses,phoneNumbers',
+          pageSize: 500 //change to fetchhh moreeeeeee
+          );
 
       return response.connections ?? [];
     } catch (e) {
@@ -119,5 +207,4 @@ class _HomepageState extends State<Homepage> {
         await googleSignIn.currentUser!.authentication;
     return auth.accessToken;
   }
-
 }
